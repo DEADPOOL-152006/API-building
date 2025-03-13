@@ -20,7 +20,7 @@ async function fetchCountries() {
     let tempCountries = [];
     let columnIndex = -1;
 
-    // Find the column index for "Country"
+    
     $("table thead tr th").each((index, element) => {
       if ($(element).text().trim().toLowerCase() === "country") {
         columnIndex = index;
@@ -31,7 +31,7 @@ async function fetchCountries() {
       throw new Error("Country column not found.");
     }
 
-    // Extract country names
+    
     $("table tbody tr").each((_, row) => {
       const cells = $(row).find("td");
       const countryName = $(cells[columnIndex]).text().trim();
@@ -40,21 +40,20 @@ async function fetchCountries() {
       }
     });
 
-    countries = tempCountries; // Update global array
+    countries = tempCountries;
   } catch (error) {
     console.error("Error fetching country data:", error);
-    countries = []; // Reset to empty array on failure
+    countries = []; 
   }
 }
 
-// Fetch countries at server start
 fetchCountries();
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// Fetch updated country list
+
 app.get("/countries", async (req, res) => {
   if (countries.length === 0) {
     await fetchCountries();
@@ -62,7 +61,6 @@ app.get("/countries", async (req, res) => {
   res.json(countries);
 });
 
-// Search for a country
 app.post("/submit", async (req, res) => {
   let input = req.body.country;
   if (!input) {
@@ -70,12 +68,12 @@ app.post("/submit", async (req, res) => {
   }
 
   if (countries.length === 0) {
-    await fetchCountries(); // Ensure countries are loaded
+    await fetchCountries(); 
   }
 
-  input = input.toLowerCase(); // Convert input to lowercase
+  input = input.toLowerCase(); 
 
-  // Filter countries based on user input
+  
   const matches = countries.filter((country) =>
     country.toLowerCase().startsWith(input)
   );
@@ -83,7 +81,7 @@ app.post("/submit", async (req, res) => {
   console.log("Matched Countries:", matches);
 
   if (matches.length === 1) {
-    const country = matches[0].replace(/\s+/g, "_"); // Replace spaces with underscores
+    const country = matches[0].replace(/\s+/g, "_"); 
     return res.redirect(
       `https://www.nationsonline.org/oneworld/${country}.htm`
     );
@@ -100,7 +98,7 @@ app.post("/submit", async (req, res) => {
   return res.send("<h2>No countries found with that initial.</h2>");
 });
 
-// Start server
+
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
