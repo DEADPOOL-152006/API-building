@@ -1,0 +1,1 @@
+In this project if you mention the initials of the country then that country will be visible to the display and if whole country name is typed then that country's webpage(unofficial) will be displayed
