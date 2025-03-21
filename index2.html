@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Country List</title>
+</head>
+<body>
+  <button id="submitButton">Fetch Next 5 Countries</button>
+  <div id="countryList"></div>
+  
+  <script>
+    let page = 0;  
+
+
+    document.getElementById("submitButton").addEventListener("click", async function() {
+      try {
+
+        const response = await fetch("/sorted", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ page: page })  
+        });
+        const countries = await response.json();  
+
+        // Display the countries
+        const countryList = document.getElementById("countryList");
+        countryList.innerHTML = '';  
+        countries.forEach(country => {
+          const countryElement = document.createElement("p");  
+          countryElement.textContent = country;  
+          countryList.appendChild(countryElement);  
+        });
+
+        page++; 
+        if (page > 38) {
+    document.getElementById("submitButton").addEventListener("click", function() {
+        alert("All countries completed now will be repeated");
+    });
+    }
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+      }
+    });
+  </script>
+</body>
+</html>
